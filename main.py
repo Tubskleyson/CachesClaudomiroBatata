@@ -1,5 +1,3 @@
-# CachesClaudomiroBatata
-
 from random import random
 from time import sleep
 
@@ -197,12 +195,99 @@ class MapeamentoAssociativo:
                     batata.linhas[i][0] = batata.tag
                     batata.linhas[i][1] = [byte0,byte1]
                     break
+
+class MapAssocConj:
+
+    def __init__(self):
+        #Mesmo esquema de acessados da classe anterior, só que agora vai precisar
+        #de um para cada conjunto.
+        self.acessConj0 = []
+        self.acessConj1 = []
+        self.acessados = [self.acessConj0, self.acessConj1]
+
+        self.conj0 = []
+        self.conj1 = []
+
+        self.conjuntos = [self.conj0,self.conj1]
+
+        for i in range(2):
+            self.conjuntos[i] = list(range(2))
+            for j in range(2):
+                byte0 = '00000000'
+                byte1 = '00000000'
+
+                bloco = [byte0,byte1]
+                tag = ''
+                
+                self.conjuntos[i][j] = [tag,bloco]
+
+    def pega(self, end):
+        self.tag = end[:3]
+        self.conj = int(end[3])
+        self.byte = int(end[4])
+
+        if self.tag not in self.acessados[self.conj]:
+            self.acessados[self.conj] += [self.tag]
+
+        for i in range(2):
+            tag = self.conjuntos[self.conj][i][0]
+            if tag == self.tag:
+                print('\n[---------hit---------]')
+                linha = self.conjuntos[self.conj][i]
+
+                bloco = linha[1]
+
+                x = bloco[self.byte]
+                print('\n-',x,'-' )
+                return x
+
+        print('\n[------------miss---------]')
+        print('Procurando na memória principal', end='')
+        for i in range(10):
+            sleep(.5)
+            print('.', end='')
+        print('\n')
+        
+        self.busca(end)
+        self.pega(end)
+
+    def busca(self, end):
+        e = conv(end)
+
+        if end[-1] == '0':
+            byte0 = MP[e]
+            byte1 = MP[e+1]
+        else:
+            byte1 = MP[e]
+            byte0 = MP[e-1]
             
-                    
+        branco = False
+        for i in range(2):
+            x = self.conjuntos[self.conj][i][0]
+            if x=='': branco=True
+
+        if branco:
+            for i in range(2):
+                if self.conjuntos[self.conj][i][0] == '':
+                    self.conjuntos[self.conj][i][0] = self.tag
+                    self.conjuntos[self.conj][i][1] = [byte0,byte1]
+                    return
+        else:
+            velho = self.acessados[self.conj][0]
+            self.acessados[self.conj] = self.acessados[self.conj][1:]
+
+            for i in range(2):
+                if self.conjuntos[self.conj][i][0] == velho:
+                    print('Removendo bloco', velho, ' do conjunto ', self.conj)
+                    self.conjuntos[self.conj][i][0] = self.tag
+                    self.conjuntos[self.conj][i][1] = [byte0,byte1]
+                    break
+            
             
         
 cache = MapeamentoDireto()
 cache1 = MapeamentoAssociativo()
+cache2 = MapAssocConj()
 
 while True:
     a = input('\nQue célula seu coração deseja? ')
@@ -211,7 +296,9 @@ while True:
     #cache.pega(a)
 
     #para usar o mapeamento associativo:
-    cache1.pega(a)
+    #cache1.pega(a)
+
+    cache2.pega(a)
 
         
 
