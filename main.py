@@ -76,7 +76,7 @@ class MapeamentoDireto:
         #se não estiver, vamos ter que ir buscar lá na meória principal
         else:
             print('\n[---------miss---------]')
-            print('Procurando na memória principal', end='')
+            print('\nProcurando na memória principal', end='')
             for i in range(10):
                 sleep(.5)
                 print('.', end='')
@@ -150,7 +150,7 @@ class MapeamentoAssociativo:
 
         #caso as tags não batam
         print('\n[------------miss-----------]')
-        print('Procurando na memória principal', end='')
+        print('\nProcurando na memória principal', end='')
         for i in range(10):
             sleep(.5)
             print('.', end='')
@@ -242,7 +242,7 @@ class MapAssocConj:
                 return x
 
         print('\n[------------miss---------]')
-        print('Procurando na memória principal', end='')
+        print('\nProcurando na memória principal', end='')
         for i in range(10):
             sleep(.5)
             print('.', end='')
@@ -283,26 +283,45 @@ class MapAssocConj:
                     self.conjuntos[self.conj][i][1] = [byte0,byte1]
                     break
             
-            
-        
-cache = MapeamentoDireto()
-cache1 = MapeamentoAssociativo()
-cache2 = MapAssocConj()
+    
+op=''
+while op == '':
+    op = input('\nDigite a opção desejada\n1 - Mapeamento Direto\n2 - Mapeamento associativo\n3 - Mapeamento Associativo de Conjuntos\n')
+    if op == '1':
+         cache = MapeamentoDireto()
+
+    elif op == '2':
+         cache = MapeamentoAssociativo()
+
+    elif op == '3':
+         cache = MapAssocConj()
+
+    else:
+         op = ''
+         print('Valor inválido')
+         
 
 while True:
-    a = input('\nQue célula seu coração deseja? ')
-    
-    #para usar o mapeamento direto:
-    #cache.pega(a)
+    a = ''
+    while a == '':
+        a = input('\nQue célula seu coração deseja? ')
+        try:
+            p = int(a)
+            if len(a) != 5 or any((i != '0' and i != '1')for i in a):
+                a = ''
+                print('Valor Inválido')
+                
+                           
+        except:
+            print('Valor invalido (Apenas valores inteiros)')
+            a = ''        
 
-    #para usar o mapeamento associativo:
-    #cache1.pega(a)
-
-    cache2.pega(a)
-
+    cache.pega(a)
         
 
         
 
         
+        
+
         
