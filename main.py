@@ -3,7 +3,7 @@ from time import sleep
 
 MP = list(range(32))
 
-#Coversor binário-decimal
+#coversor binário-decimal
 def conv(v):
     j = len(v) - 1
     x = 0
